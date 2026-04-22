@@ -1,0 +1,19 @@
+Home Work 3
+
+Theme: AI usage in Uzb.
+
+
+1. Marketplaces: like Uzum, Yandex, Ozon and ect.
+
+There are 4 main types of recomendations algorithms in ML.
+a) Colobarative filtering
+People with the same taste, like same things.
+b) Content based filtering
+Recommends similar content, based on users preferences.
+c) Hybrid
+Conbination of two previous methods given above.
+d) Popularity method
+Suggest what is viral at the moment.
+
+2. Anti-Frod
+3. Taxi prices
