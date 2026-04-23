@@ -1,0 +1,117 @@
+Task1
+
+Mobile Payment Fraud Detection.
+This is Classification, it easy to understand, bacause ML only need to understand is it fraud or not. There is only two classes and by learning the pattern of transactions and other rules ML identifies it. Yes, there is class imabalance situcation, because fraud is rare, can happen ones in your life time.
+
+task2 
+We have already learned that for the fraud detection we need several rules like time of the transaction, palce, ip address, amount of money, amount of transactions.
+transaction_id
+Used to uniquely identify each transaction in the system.
+amount
+Helps detect unusual transaction sizes that may indicate fraud.
+timestamp
+Allows the model to analyze when the transaction occurred and detect suspicious timing patterns.
+sender_id
+Identifies the user who initiates the transaction and helps track their behavior.
+receiver_id
+Used to analyze whether the receiver is associated with suspicious activity.
+transaction_type
+Different transaction types (transfer, payment, withdrawal) may have different fraud risks.
+device_info
+Detects if the transaction is made from a new or unusual device.
+location
+Helps identify suspicious geographic activity (e.g., sudden location change).
+historical_transaction_frequency
+Allows the model to compare current behavior with normal user activity.
+account_age
+New accounts are more likely to be involved in fraudulent activity.
+
+
+task3
+
+F1=2⋅(Precision⋅Recall)​ / (Precision+Recall)
+
+Precision → “насколько ты точно находишь мошенников”
+Recall → “насколько много мошенников ты находишь”
+
+AUC-ROC показывает, насколько хорошо модель отличает fraud от normal
+
+
+F1-score is a combination of precision and recall, which makes it suitable for imbalanced datasets like fraud detection.
+
+Precision measures how many detected fraud transactions are actually fraud
+Recall measures how many real fraud cases the model successfully detects
+ Why not only accuracy?
+
+Accuracy is not suitable because fraud cases are very rare.
+For example, if 99% of transactions are normal, the model can achieve 99% accuracy by always predicting “not fraud,” which is useless.
+
+ Trade-off explanation
+High precision → fewer false alarms but may miss real fraud
+High recall → catches more fraud but may flag normal users
+
+F1-score balances both, ensuring that the model is both accurate and effective.
+
+
+task4
+
+ What could go wrong
+False positives (normal users flagged as fraud)
+Legitimate users may have their transactions blocked, causing frustration and loss of trust.
+False negatives (fraud not detected)
+The system may fail to detect some fraudulent transactions, leading to financial losses.
+Class imbalance problem
+Since fraud cases are rare, the model may learn to ignore them and predict “not fraud” too often.
+Overfitting to historical patterns
+Fraud strategies change over time, so the model may not detect new types of fraud.
+Data quality issues
+Incorrect or incomplete data can lead to poor predictions.
+
+  Who might be unfairly affected
+New users
+They have little history, so the model may treat them as suspicious.
+Users with unusual behavior
+People who travel or make large transactions may be incorrectly flagged.
+Users from certain locations
+If the training data is biased, some regions may be flagged more often.
+Low-income users or small businesses
+Frequent small transactions may look suspicious and be unfairly blocked.
+
+task5
+Risks of collecting this data
+Privacy invasion
+Collecting detailed user data may violate personal privacy.
+Data breaches
+If the system is hacked, sensitive financial and personal data could be exposed.
+Misuse of data
+Data could be used for purposes other than fraud detection without user consent.
+Bias and discrimination
+Certain user groups may be unfairly targeted due to biased data.
+Lack of transparency
+Users may not know how their data is being used or why their transactions are flagged.
+
+task6
+While the model can effectively detect fraudulent transactions, it is not perfect and may produce errors such as false positives and false negatives.
+
+Deploying the system without safeguards could:
+
+block legitimate users
+reduce user trust
+cause financial inconvenience
+
+Therefore, the best approach is to deploy the system with guardrails to balance effectiveness, fairness, and user trust.
+
+task7
+1. Would your ethical concerns change if this system were deployed in a country with strict data
+privacy laws (e.g., EU with GDPR)?
+2. Is it possible to build a useful recommendation/fraud system without collecting personal data?
+What would you lose?
+3. Who should be responsible when an ML system makes a wrong decision — the developer, the
+company, or the algorithm?
+
+1. Yes, ethical concerns would be reduced in countries with strict data privacy laws like GDPR, because data collection and usage are more regulated. However, issues such as bias, unfair decisions, and model errors would still remain, so ethical considerations are still important.
+2.Yes, it is possible to build such systems using anonymized or aggregated data. However, the model would lose accuracy and personalization. In fraud detection, it would be harder to detect suspicious behavior without user-specific patterns.
+3.The main responsibility lies with the company that deploys the system, because it decides how it is used. Developers also share responsibility for the design and implementation. The algorithm itself cannot be responsible, as it is only a tool.
+
+
+​
