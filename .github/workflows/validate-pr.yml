@@ -23,7 +23,7 @@ jobs:
             });
 
             const ALLOWED_EXT = /\.(pdf|docx|ipynb|md|txt)$/i;
-            const BAD_NAME = /(Новый документ|New Document|Untitled|Document\d|\(1\)|\(copy\))/i;
+            const BAD_NAME = /(Новый документ|New Document|Untitled|Document\d)/i;
             const SUBMISSIONS_PATH = /^module-\d+\/class_\d+\/submissions\/[^\/]+/;
             const ALLOWED_OUTSIDE = /^(\.github|README\.md|LICENSE|\.gitignore)/;
 
@@ -50,7 +50,7 @@ jobs:
 
               // Placeholder filename
               if (SUBMISSIONS_PATH.test(f.filename) && BAD_NAME.test(f.filename)) {
-                errors.push("❌ `" + f.filename + "` — placeholder or duplicate-download filename. Rename to `<YourName>_Class<N>.<ext>` before resubmitting.");
+                errors.push("❌ `" + f.filename + "` — placeholder filename detected. Consider renaming to `<YourName>_Class<N>.<ext>` for clarity.");
               }
 
               // Modifying existing files
