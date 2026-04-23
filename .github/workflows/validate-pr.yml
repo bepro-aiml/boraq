@@ -1,0 +1,77 @@
+name: Validate submission PR
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+  issues: write
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              per_page: 300
+            });
+
+            const ALLOWED_EXT = /\.(pdf|docx|ipynb|md|txt)$/i;
+            const BAD_NAME = /(Новый документ|New Document|Untitled|Document\d|\(1\)|\(copy\))/i;
+            const SUBMISSIONS_PATH = /^module-\d+\/class_\d+\/submissions\/[^\/]+/;
+            const ALLOWED_OUTSIDE = /^(\.github|README\.md|LICENSE|\.gitignore)/;
+
+            const errors = [];
+            for (const f of files) {
+              if (f.status === "removed") continue;
+
+              // Flag dash-folder usage
+              if (/^module-\d+\/class-\d+/.test(f.filename)) {
+                errors.push("❌ `" + f.filename + "` — uses `class-` (dash). Folder must be `class_` (underscore).");
+                continue;
+              }
+
+              // If under a module-* tree, must be in submissions/
+              if (f.filename.startsWith("module-") && !SUBMISSIONS_PATH.test(f.filename)) {
+                errors.push("❌ `" + f.filename + "` — file is not inside `module-N/class_X/submissions/`. Move it there.");
+                continue;
+              }
+
+              // Extension check
+              if (SUBMISSIONS_PATH.test(f.filename) && !ALLOWED_EXT.test(f.filename)) {
+                errors.push("❌ `" + f.filename + "` — format not allowed. Use `.pdf`, `.docx`, `.ipynb`, `.md`, or `.txt`.");
+              }
+
+              // Placeholder filename
+              if (SUBMISSIONS_PATH.test(f.filename) && BAD_NAME.test(f.filename)) {
+                errors.push("❌ `" + f.filename + "` — placeholder or duplicate-download filename. Rename to `<YourName>_Class<N>.<ext>` before resubmitting.");
+              }
+
+              // Modifying existing files
+              if (f.status === "modified" || f.status === "changed" || f.status === "renamed") {
+                if (!ALLOWED_OUTSIDE.test(f.filename)) {
+                  errors.push("⚠ `" + f.filename + "` — you are **modifying** an existing file. Submissions should only **add** new files under your own path.");
+                }
+              }
+            }
+
+            const body = errors.length === 0
+              ? "✅ **Submission check passed** — your PR looks clean. A mentor will review and merge."
+              : "## ❌ Submission check failed (" + errors.length + " issue" + (errors.length>1?"s":"") + ")\n\nFix these before asking for review:\n\n" + errors.map(e => "- " + e).join("\n") + "\n\nAfter you fix them, push new commits to this branch — the check re-runs automatically.";
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });
+
+            if (errors.length > 0) {
+              core.setFailed(errors.length + " submission issue(s) — see PR comment for details.");
+            }
