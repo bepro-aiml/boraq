@@ -1,0 +1,7 @@
+services:
+  api:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./model.pkl:/app/model.pkl:ro
